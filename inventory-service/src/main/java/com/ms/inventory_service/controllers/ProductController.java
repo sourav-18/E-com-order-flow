@@ -20,11 +20,8 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponseDto<ProductDto>> details(@PathVariable("id") Long id){
-        ProductDto product=productService.details(id);
-        ApiResponseDto<ProductDto> apiResponse =
-                new ApiResponseDto<>(HttpStatus.CREATED.value(), "Product details fetch successfully",product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    public ProductDto details(@PathVariable("id") Long id){
+        return productService.details(id);
     }
 
 }

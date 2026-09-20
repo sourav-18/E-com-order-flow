@@ -4,7 +4,7 @@ import com.ms.inventory_service.dtos.ProductDto;
 import com.ms.inventory_service.entities.ProductEntity;
 import com.ms.inventory_service.exceptions.DataNotFoundException;
 import com.ms.inventory_service.mapper.ProductMapper;
-import com.ms.inventory_service.repositiries.ProductRepository;
+import com.ms.inventory_service.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

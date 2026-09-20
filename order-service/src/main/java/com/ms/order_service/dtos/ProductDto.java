@@ -1,4 +1,4 @@
-package com.ms.inventory_service.dtos;
+package com.ms.order_service.dtos;
 
 import lombok.*;
 
@@ -7,7 +7,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class ProductDto {
     private Long id;
     private String name;
