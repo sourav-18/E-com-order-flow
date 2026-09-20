@@ -29,6 +29,9 @@ public class OrderEntity {
 
     private int finalTotalPrice;
 
+    @Column(unique = true,nullable = false)
+    private String idempotencyKey;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

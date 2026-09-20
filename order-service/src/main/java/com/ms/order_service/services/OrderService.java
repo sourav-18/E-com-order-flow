@@ -24,9 +24,14 @@ public class OrderService {
         if(productDetails.getAvailableQuantity()< body.getQuantity()){
             throw new RuntimeException();
         }
+        OrderEntity orderEntity = orderRepository.findByIdempotencyKey(body.getIdempotencyKey()).orElse(null);
+        if(orderEntity!=null){
+            return orderEntity;
+        }
+
         OrderEntity newOrder = OrderMapper.toEntity(body, productDetails);
 
-        orderRepository.save(newOrder);
+        OrderEntity save = orderRepository.save(newOrder);
 
         return null;
 
