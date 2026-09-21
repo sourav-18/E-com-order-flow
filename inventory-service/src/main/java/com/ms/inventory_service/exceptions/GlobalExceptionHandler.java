@@ -12,4 +12,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(404)
                 .body(new ApiErrorResponseDto(404,ex.getMessage()));
     }
+
+    @ExceptionHandler(DuplicateProductReserveException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleValidationException(DuplicateProductReserveException ex) {
+        return ResponseEntity.status(400)
+                .body(new ApiErrorResponseDto(400,ex.getMessage()));
+    }
 }
