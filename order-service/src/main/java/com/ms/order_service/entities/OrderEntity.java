@@ -1,9 +1,7 @@
 package com.ms.order_service.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +23,11 @@ public class OrderEntity {
 
     private Long productId;
 
-    private int quantity;
+    private Integer quantity;
 
-    private int price;
+    private Integer price;
 
-    private int finalTotalPrice;
+    private Integer finalTotalPrice;
 
     @Column(unique = true,nullable = false)
     private String idempotencyKey;

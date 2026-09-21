@@ -24,4 +24,8 @@ public class ProductController {
         return productService.details(id);
     }
 
+    public Object reserved(){
+        return null;
+    }
+
 }

@@ -40,7 +40,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<ApiErrorResponseDto> handleValidationException(FeignException ex) {
-        return ResponseEntity.status(404)
-                .body(new ApiErrorResponseDto(404,ex.getMessage()));
+        return ResponseEntity.status(400)
+                .body(new ApiErrorResponseDto(400,ex.getMessage()));
+    }
+
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleValidationException(DataNotFoundException ex) {
+        return ResponseEntity.status(400)
+                .body(new ApiErrorResponseDto(400,ex.getMessage()));
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleValidationException(InsufficientStockException ex) {
+        return ResponseEntity.status(400)
+                .body(new ApiErrorResponseDto(400,ex.getMessage()));
     }
 }
