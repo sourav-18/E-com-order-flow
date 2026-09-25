@@ -29,6 +29,11 @@ public class ProductService {
         return ProductMapper.toDto(product);
     }
 
+    @Transactional
+    public void restoreAvailableQuantity(Long id,Integer quantity){
+        productRepository.updateAvailableQuantity(id,quantity);
+    }
+
 
 
 }

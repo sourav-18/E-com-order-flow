@@ -2,6 +2,7 @@ package com.ms.payment_service.controllers;
 
 import com.ms.payment_service.dtos.ApiResponseDto;
 import com.ms.payment_service.dtos.PaymentResponseDto;
+import com.ms.payment_service.dtos.PaymentStatusUpdateRequest;
 import com.ms.payment_service.services.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,5 +19,10 @@ public class PaymentController {
         PaymentResponseDto payment = paymentService.payment(orderId);
         ApiResponseDto<PaymentResponseDto> apiResponse=new ApiResponseDto<>(payment.getResponseCode(),"Payment initiate successfully",payment);
         return ResponseEntity.status(payment.getResponseCode()).body(apiResponse);
+    }
+
+    @PatchMapping("/callback")
+    public void callBack(@RequestBody PaymentStatusUpdateRequest body){
+        paymentService.updateStatus(body);
     }
 }

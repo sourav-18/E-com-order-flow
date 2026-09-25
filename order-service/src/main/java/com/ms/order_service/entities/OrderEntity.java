@@ -1,5 +1,6 @@
 package com.ms.order_service.entities;
 
+import com.ms.order_service.entities.types.OrderStatusType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,6 +32,10 @@ public class OrderEntity {
 
     @Column(unique = true,nullable = false)
     private String idempotencyKey;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatusType status;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

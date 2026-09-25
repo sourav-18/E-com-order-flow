@@ -6,6 +6,7 @@ import com.ms.order_service.dtos.OrderCreateRequestDto;
 import com.ms.order_service.dtos.OrderDto;
 import com.ms.order_service.dtos.ProductDto;
 import com.ms.order_service.entities.OrderEntity;
+import com.ms.order_service.entities.types.OrderStatusType;
 
 public class OrderMapper {
     public static OrderEntity toEntity(OrderCreateRequestDto orderCreateRequestDto,ProductDto productDto){
@@ -15,6 +16,7 @@ public class OrderMapper {
                 .quantity(orderCreateRequestDto.getQuantity())
                 .finalTotalPrice(productDto.getPrice()*orderCreateRequestDto.getQuantity())
                 .idempotencyKey(orderCreateRequestDto.getIdempotencyKey())
+                .status(OrderStatusType.pending)
                 .build();
     }
 

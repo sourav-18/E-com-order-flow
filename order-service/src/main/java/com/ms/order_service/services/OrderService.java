@@ -6,12 +6,14 @@ import com.ms.order_service.dtos.OrderCreateRequestDto;
 import com.ms.order_service.dtos.OrderDto;
 import com.ms.order_service.dtos.ProductDto;
 import com.ms.order_service.entities.OrderEntity;
+import com.ms.order_service.entities.types.OrderStatusType;
 import com.ms.order_service.exceptions.DataNotFoundException;
 import com.ms.order_service.exceptions.InsufficientStockException;
 import com.ms.order_service.mapper.OrderMapper;
 import com.ms.order_service.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +44,10 @@ public class OrderService {
     public OrderDto details(Long id){
         OrderEntity order = orderRepository.findById(id).orElseThrow(() -> new DataNotFoundException("order id not found"));
         return OrderMapper.toDto(order);
+    }
+
+    @Transactional
+    public void statusUpdate(Long id, OrderStatusType status){
+        orderRepository.updateStatus(id,status,OrderStatusType.pending);
     }
 }
