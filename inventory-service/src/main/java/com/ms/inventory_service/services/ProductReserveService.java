@@ -3,7 +3,10 @@ package com.ms.inventory_service.services;
 import com.ms.inventory_service.clients.OrderClient;
 import com.ms.inventory_service.dtos.OrderDto;
 import com.ms.inventory_service.dtos.ProductReserveCreateResponseDto;
+import com.ms.inventory_service.dtos.ProductReserveDto;
+import com.ms.inventory_service.entities.ProductEntity;
 import com.ms.inventory_service.entities.ProductReservesEntity;
+import com.ms.inventory_service.exceptions.DataNotFoundException;
 import com.ms.inventory_service.exceptions.DuplicateProductReserveException;
 import com.ms.inventory_service.mapper.ProductReserveMapper;
 import com.ms.inventory_service.repositories.ProductRepository;
@@ -27,8 +30,18 @@ public class ProductReserveService {
         if(productReservesEntity!=null){
             throw new DuplicateProductReserveException("product already reserved for this order");
         }
-        ProductReservesEntity newReserved = ProductReserveMapper.toEntity(orderId, orderDetails.getProductId(),orderDetails.getQuantity());
+        ProductReservesEntity newReserved = ProductReserveMapper.toEntity(orderId,
+                orderDetails.getProductId(),
+                orderDetails.getQuantity(),
+                orderDetails.getFinalTotalPrice()
+        );
         productReserveRepository.save(newReserved);
         return ProductReserveMapper.toDto(newReserved, orderDetails.getFinalTotalPrice(), nextApiUrl);
+    }
+
+    public ProductReserveDto details(Long orderId){
+        ProductReservesEntity productReservesEntity = productReserveRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new DataNotFoundException("order is not reserved yet"));
+        return ProductReserveMapper.toDto(productReservesEntity);
     }
 }

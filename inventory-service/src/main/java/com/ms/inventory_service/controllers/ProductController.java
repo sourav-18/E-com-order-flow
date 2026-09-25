@@ -1,8 +1,6 @@
 package com.ms.inventory_service.controllers;
 
-import com.ms.inventory_service.dtos.ApiErrorResponseDto;
-import com.ms.inventory_service.dtos.ApiResponseDto;
-import com.ms.inventory_service.dtos.ProductDto;
+import com.ms.inventory_service.dtos.*;
 import com.ms.inventory_service.services.ProductReserveService;
 import com.ms.inventory_service.services.ProductService;
 import lombok.AllArgsConstructor;
@@ -23,9 +21,17 @@ public class ProductController {
         return productService.details(id);
     }
 
-    @GetMapping("/reserved/{orderId}")
-    public Object reserved(@PathVariable("orderId") Long orderId){
-       return productReserveService.reserved(orderId);
+    @PostMapping("/reserved/{orderId}")
+    public ResponseEntity<ApiResponseDto<ProductReserveCreateResponseDto>> reserved(@PathVariable("orderId") Long orderId){
+        ProductReserveCreateResponseDto reserved = productReserveService.reserved(orderId);
+        ApiResponseDto<ProductReserveCreateResponseDto>apiResponse=new ApiResponseDto<>(201,"Product Reserved successfully",reserved);
+        return ResponseEntity.status(201).body(apiResponse);
     }
+
+    @GetMapping("/reserved/{orderId}")
+    public ProductReserveDto reservedDetails(@PathVariable("orderId") Long orderId){
+        return productReserveService.details(orderId);
+    }
+
 
 }

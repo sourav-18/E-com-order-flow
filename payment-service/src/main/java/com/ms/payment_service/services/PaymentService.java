@@ -1,8 +1,10 @@
 package com.ms.payment_service.services;
 
+import com.ms.payment_service.clients.InventoryClient;
 import com.ms.payment_service.clients.OrderClient;
 import com.ms.payment_service.dtos.OrderDto;
 import com.ms.payment_service.dtos.PaymentResponseDto;
+import com.ms.payment_service.dtos.ProductReserveDto;
 import com.ms.payment_service.entities.PaymentEntity;
 import com.ms.payment_service.mappers.PaymentMapper;
 import com.ms.payment_service.repositories.PaymentRepository;
@@ -14,16 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PaymentService {
     private final PaymentRepository paymentRepository;
-    private final OrderClient orderClient;
+    private final InventoryClient inventoryClient;
 
     @Transactional
-    PaymentResponseDto payment(Long orderId){
-        OrderDto orderDetails = orderClient.details(orderId);
+   public PaymentResponseDto payment(Long orderId){
+        ProductReserveDto productReserveDetails = inventoryClient.reservedDetails(orderId);
         PaymentEntity paymentEntity = paymentRepository.findByOrderId(orderId).orElse(null);
         if(paymentEntity!=null){
             return PaymentMapper.toDto(paymentEntity,200);
         }
-        PaymentEntity newPayment= PaymentMapper.toEntity(orderId,orderDetails.getFinalTotalPrice(),orderId.toString());
+        PaymentEntity newPayment= PaymentMapper.toEntity(orderId,productReserveDetails.getTotalAmount(),orderId.toString());
         paymentRepository.save(newPayment);
         return PaymentMapper.toDto(newPayment,201);
     }

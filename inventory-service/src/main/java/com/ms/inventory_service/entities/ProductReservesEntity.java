@@ -33,6 +33,9 @@ public class ProductReservesEntity {
     @Column(nullable = false)
     private ProductReservesStatusType status;
 
+    @Column(nullable = false,name = "total_amount")
+    private int totalAmount;
+
 
     @CreationTimestamp
     private LocalDateTime createdAt;
