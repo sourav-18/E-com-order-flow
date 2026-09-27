@@ -34,6 +34,12 @@ public class ProductService {
         productRepository.updateAvailableQuantity(id,quantity);
     }
 
+    @Transactional
+    public boolean reserveAvailableQuantity(Long id,Integer quantity){
+        Integer updated = productRepository.reserveAvailableQuantity(id, quantity);
+        return updated != 0;
+    }
+
 
 
 }

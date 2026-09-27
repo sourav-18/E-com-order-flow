@@ -31,6 +31,10 @@ public class ProductReserveService {
         if (productReservesEntity != null) {
             throw new DuplicateProductReserveException("product already reserved for this order");
         }
+        boolean isReserved = productService.reserveAvailableQuantity(orderDetails.getProductId(), orderDetails.getQuantity());
+        if(!isReserved){
+            throw new DuplicateProductReserveException("insaficiat avaliable quantity"); //todo proper set error
+        }
         ProductReservesEntity newReserved = ProductReserveMapper.toEntity(orderId,
                 orderDetails.getProductId(),
                 orderDetails.getQuantity(),
@@ -46,11 +50,13 @@ public class ProductReserveService {
         return ProductReserveMapper.toDto(productReservesEntity);
     }
 
+    @Transactional
     public void statusUpdate(PaymentStatusDto paymentStatusDto) {
         ProductReservesStatusType status = StatusUtils
                 .PaymentStatusToProductReservesStatus(paymentStatusDto.getStatus());
-        Integer updated = productReserveRepository.updateStatus(paymentStatusDto.getPaymentId(), status, ProductReservesStatusType.pending);
+        Integer updated = productReserveRepository.updateStatus(paymentStatusDto.getOrderId(), status, ProductReservesStatusType.pending);
         if (updated == 0) return;
+        System.out.println(status);
         if (status == ProductReservesStatusType.cancel) {
             ProductReservesEntity productReservesEntity = productReserveRepository.findByOrderId(paymentStatusDto.getOrderId()).orElse(null);
             if (productReservesEntity == null) return;

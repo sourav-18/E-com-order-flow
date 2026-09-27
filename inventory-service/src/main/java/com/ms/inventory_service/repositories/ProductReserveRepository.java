@@ -18,9 +18,9 @@ public interface ProductReserveRepository extends JpaRepository<ProductReservesE
     @Query("""
             UPDATE ProductReservesEntity
             SET status=:currentStatus
-            WHERE status=:previousStatus AND id=:id
+            WHERE status=:previousStatus AND orderId=:orderId
             """)
-    Integer updateStatus(@Param("id") Long id,
+    Integer updateStatus(@Param("orderId") Long orderId,
                          @Param("currentStatus") ProductReservesStatusType currentStatus,
                          @Param("previousStatus") ProductReservesStatusType previousStatus);
 }
