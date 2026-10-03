@@ -4,6 +4,7 @@ package com.ms.user_service.exceptions;
 import com.ms.user_service.dtos.ApiErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -47,5 +48,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDto> handleValidationException(DataNotFoundException ex) {
         return ResponseEntity.status(404)
                 .body(new ApiErrorResponseDto(400, ex.getMessage()));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleBadCredentialException(BadCredentialsException ex) {
+        return ResponseEntity.status(403)
+                .body(new ApiErrorResponseDto(403, ex.getMessage()));
     }
 }

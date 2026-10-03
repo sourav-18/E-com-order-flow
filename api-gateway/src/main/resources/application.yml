@@ -1,0 +1,27 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: inventory-service
+              uri: lb://INVENTORY-SERVICE
+              predicates:
+                - Path=/api/v1/products/**
+
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://${SPRING_SECURITY_USER_NAME}:${SPRING_SECURITY_USER_PASSWORD}@localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+

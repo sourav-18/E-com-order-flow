@@ -11,6 +11,9 @@ import com.ms.user_service.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     public UserDto signup(SignupRequestDto body, HttpServletResponse response) {
         UserEntity userEntity = userRepository.findByEmail(body.getEmail()).orElse(null);
@@ -31,17 +35,21 @@ public class UserService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userRepository.save(newUser);
         String token = jwtService.generateToken(newUser.getId().toString(), null);
-        response.setHeader("x-access-token",token);
+        response.setHeader("x-access-token", token);
         return UserMapper.toDto(newUser);
     }
 
 
     public UserDto login(LoginRequestDto body, HttpServletResponse response) {
         UserEntity userEntity = userRepository.findByEmail(body.getEmail())
-                .orElseThrow(()->new DataNotFoundException("Email not found"));
+                .orElseThrow(() -> new DataNotFoundException("Email not found"));
+
+        authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        userEntity.getId().toString(), body.getPassword()));
 
         String token = jwtService.generateToken(userEntity.getId().toString(), null);
-        response.setHeader("x-access-token",token);
+        response.setHeader("x-access-token", token);
         return UserMapper.toDto(userEntity);
     }
 
