@@ -3,6 +3,7 @@ package com.ms.inventory_service.controllers;
 import com.ms.inventory_service.dtos.*;
 import com.ms.inventory_service.services.ProductReserveService;
 import com.ms.inventory_service.services.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,8 @@ public class ProductController {
     private final ProductReserveService productReserveService;
 
     @GetMapping("/{id}")
-    public ProductDto details(@PathVariable("id") Long id){
+    public ProductDto details(HttpServletRequest request, @PathVariable("id") Long id){
+        System.out.println(request.getHeader("user-id"));
         return productService.details(id);
     }
 
