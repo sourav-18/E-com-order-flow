@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -12,7 +13,8 @@ import java.util.HashMap;
 
 @Service
 public class JwtService {
-    private static final String SECRET="1780c751e9e9c17044c0678a2c1c8be9bc948d3bab76056f29b00d202f60f4a7";
+    @Value("${jwt.secret}")
+    private String SECRET;
 
     public String generateToken(String username,String role){
         HashMap<String, Object> claims=new HashMap<>();

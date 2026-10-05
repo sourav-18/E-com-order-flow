@@ -24,8 +24,9 @@ public class ProductController {
     }
 
     @PostMapping("/reserved/{orderId}")
-    public ResponseEntity<ApiResponseDto<ProductReserveCreateResponseDto>> reserved(@PathVariable("orderId") Long orderId){
-        ProductReserveCreateResponseDto reserved = productReserveService.reserved(orderId);
+    public ResponseEntity<ApiResponseDto<ProductReserveCreateResponseDto>> reserved(HttpServletRequest request,@PathVariable("orderId") Long orderId){
+        Long userId = Long.valueOf(request.getHeader("user-id"));
+        ProductReserveCreateResponseDto reserved = productReserveService.reserved(orderId,userId);
         ApiResponseDto<ProductReserveCreateResponseDto>apiResponse=new ApiResponseDto<>(201,"Product Reserved successfully",reserved);
         return ResponseEntity.status(201).body(apiResponse);
     }

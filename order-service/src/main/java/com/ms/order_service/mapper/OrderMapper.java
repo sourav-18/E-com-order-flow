@@ -9,13 +9,14 @@ import com.ms.order_service.entities.OrderEntity;
 import com.ms.order_service.entities.types.OrderStatusType;
 
 public class OrderMapper {
-    public static OrderEntity toEntity(OrderCreateRequestDto orderCreateRequestDto,ProductDto productDto){
+    public static OrderEntity toEntity(OrderCreateRequestDto orderCreateRequestDto,Long userId,ProductDto productDto){
         return OrderEntity.builder()
                 .productId(productDto.getId())
                 .price(productDto.getPrice())
                 .quantity(orderCreateRequestDto.getQuantity())
                 .finalTotalPrice(productDto.getPrice()*orderCreateRequestDto.getQuantity())
                 .idempotencyKey(orderCreateRequestDto.getIdempotencyKey())
+                .userId(userId)
                 .status(OrderStatusType.pending)
                 .build();
     }
@@ -26,6 +27,7 @@ public class OrderMapper {
                 .productId(order.getProductId())
                 .price(order.getPrice())
                 .quantity(order.getQuantity())
+                .userId(order.getUserId())
                 .finalTotalPrice(order.getFinalTotalPrice())
                 .build();
     }
@@ -37,6 +39,7 @@ public class OrderMapper {
                 .price(order.getPrice())
                 .quantity(order.getQuantity())
                 .finalTotalPrice(order.getFinalTotalPrice())
+                .userId(order.getUserId())
                 .status(status)
                 .build();
     }

@@ -10,6 +10,7 @@ import lombok.*;
 public class OrderDto {
     private Long id;
     private Long productId;
+    private Long userId;
     private Integer quantity;
     private Integer price;
     private Integer finalTotalPrice;

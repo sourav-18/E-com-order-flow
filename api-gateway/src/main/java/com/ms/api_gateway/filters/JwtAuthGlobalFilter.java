@@ -46,21 +46,24 @@ public class JwtAuthGlobalFilter implements GlobalFilter, Ordered {
             try {
                 if (!jwtService.isTokenExpired(token)) {
                     Claims claims = jwtService.verifySignatureAdnExtractAllClaims(token);
-                    ServerWebExchange mutatedExchange = exchange.mutate()
-                            .request(builder -> builder.header("user-id", claims.getId()))
+
+                    ServerHttpRequest build = exchange.getRequest()
+                            .mutate()
+                            .header("user-id", claims.getSubject())
                             .build();
-                    return chain.filter(mutatedExchange).then(
-                            Mono.fromRunnable(() -> {
-                                // post filter logic here
-                            })
+
+                    return chain.filter(
+                            exchange.mutate()
+                                    .request(build)
+                                    .build()
                     );
                 }
             } catch (Exception e) {
+                System.out.println(e.getMessage());
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();
             }
         }
-
         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
         return exchange.getResponse().setComplete();
 

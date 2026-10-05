@@ -25,8 +25,11 @@ public class ProductReserveService {
     private String nextApiUrl = "http://localhost:9003/api/v1/payments";  //todo move to utils
 
     @Transactional
-    public ProductReserveCreateResponseDto reserved(Long orderId) {
+    public ProductReserveCreateResponseDto reserved(Long orderId,Long useId) {
         OrderDto orderDetails = orderClient.details(orderId);
+        if(!orderDetails.getUserId().equals(useId)){
+            throw new DuplicateProductReserveException("It's not your order"); //todo proper set error
+        }
         ProductReservesEntity productReservesEntity = productReserveRepository.findByOrderId(orderId).orElse(null);
         if (productReservesEntity != null) {
             throw new DuplicateProductReserveException("product already reserved for this order");

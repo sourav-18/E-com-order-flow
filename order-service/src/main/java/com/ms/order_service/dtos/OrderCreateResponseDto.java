@@ -11,6 +11,7 @@ import lombok.Setter;
 public class OrderCreateResponseDto {
     private Long id;
     private Long productId;
+    private Long userId;
     private Integer quantity;
     private Integer price;
     private Integer finalTotalPrice;

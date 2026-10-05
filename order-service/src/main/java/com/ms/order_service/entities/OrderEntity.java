@@ -22,12 +22,19 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long productId;
 
+    @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
     private Integer quantity;
 
+    @Column(nullable = false)
     private Integer price;
 
+    @Column(nullable = false)
     private Integer finalTotalPrice;
 
     @Column(unique = true,nullable = false)

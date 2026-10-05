@@ -21,33 +21,33 @@ public class OrderService {
 
     private final InventoryClient inventoryClient;
     private final OrderRepository orderRepository;
-    private String nextApiUrl="http://localhost:9002/api/v1/inventory/reserved";  //todo move to utils
+    private String nextApiUrl = "http://localhost:9002/api/v1/inventory/reserved";  //todo move to utils
 
-    public OrderCreateResponseDto create(OrderCreateRequestDto body){
+    public OrderCreateResponseDto create(OrderCreateRequestDto body, Long userId) {
         OrderEntity orderEntity = orderRepository.findByIdempotencyKey(body.getIdempotencyKey()).orElse(null);
-        if(orderEntity!=null){
-            return OrderMapper.toDto(orderEntity,200,nextApiUrl);
+        if (orderEntity != null) {
+            return OrderMapper.toDto(orderEntity, 200, nextApiUrl);
         }
 
         ProductDto productDetails = inventoryClient.getProductDetails(body.getProductId()); //todo if error come sent proper error message
 
-        if(productDetails.getAvailableQuantity()< body.getQuantity()){
+        if (productDetails.getAvailableQuantity() < body.getQuantity()) {
             throw new InsufficientStockException("Insufficient stock available");
         }
 
-        OrderEntity newOrder = OrderMapper.toEntity(body, productDetails);
+        OrderEntity newOrder = OrderMapper.toEntity(body, userId, productDetails);
         orderRepository.save(newOrder);
 
-        return OrderMapper.toDto(newOrder,201,nextApiUrl);
+        return OrderMapper.toDto(newOrder, 201, nextApiUrl);
     }
 
-    public OrderDto details(Long id){
+    public OrderDto details(Long id) {
         OrderEntity order = orderRepository.findById(id).orElseThrow(() -> new DataNotFoundException("order id not found"));
         return OrderMapper.toDto(order);
     }
 
     @Transactional
-    public void statusUpdate(Long id, OrderStatusType status){
-        orderRepository.updateStatus(id,status,OrderStatusType.pending);
+    public void statusUpdate(Long id, OrderStatusType status) {
+        orderRepository.updateStatus(id, status, OrderStatusType.pending);
     }
 }
