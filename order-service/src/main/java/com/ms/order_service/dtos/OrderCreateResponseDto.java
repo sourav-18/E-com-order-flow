@@ -1,13 +1,13 @@
 package com.ms.order_service.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderCreateResponseDto {
     private Long id;
     private Long productId;

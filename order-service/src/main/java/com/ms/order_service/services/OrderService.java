@@ -32,6 +32,9 @@ public class OrderService {
         }
 
         ProductDto productDetails = inventoryClient.getProductDetails(body.getProductId());
+        if (productDetails == null) {
+            throw new DataNotFoundException("Product not found");
+        }
 
         if (productDetails.getAvailableQuantity() < body.getQuantity()) {
             throw new InsufficientStockException("Product stock is not available");
