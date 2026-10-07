@@ -1,4 +1,4 @@
-package com.ms.user_service.dtos;
+package com.ms.api_gateway.dots;
 
 import lombok.Getter;
 

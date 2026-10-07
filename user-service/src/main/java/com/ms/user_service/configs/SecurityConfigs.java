@@ -26,8 +26,7 @@ public class SecurityConfigs {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/api/v1/auth/**").permitAll()
-                                .anyRequest().authenticated());
+                                .anyRequest().permitAll());
 //                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

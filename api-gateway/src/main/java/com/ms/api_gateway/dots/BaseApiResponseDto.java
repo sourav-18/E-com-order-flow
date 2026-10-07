@@ -1,12 +1,10 @@
-package com.ms.order_service.dtos;
+package com.ms.api_gateway.dots;
 
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
-@ToString
 public class BaseApiResponseDto {
     private final Boolean success;
     private final Integer status;

@@ -12,6 +12,7 @@ import com.ms.order_service.exceptions.InsufficientStockException;
 import com.ms.order_service.mapper.OrderMapper;
 import com.ms.order_service.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,8 @@ public class OrderService {
 
     private final InventoryClient inventoryClient;
     private final OrderRepository orderRepository;
-    private String nextApiUrl = "http://localhost:9002/api/v1/inventory/reserved";  //todo move to utils
+    @Value("${inventory.reserved.api}")
+    private String nextApiUrl;
 
     public OrderCreateResponseDto create(OrderCreateRequestDto body, Long userId) {
         OrderEntity orderEntity = orderRepository.findByIdempotencyKey(body.getIdempotencyKey()).orElse(null);
@@ -29,10 +31,10 @@ public class OrderService {
             return OrderMapper.toDto(orderEntity, 200, nextApiUrl);
         }
 
-        ProductDto productDetails = inventoryClient.getProductDetails(body.getProductId()); //todo if error come sent proper error message
+        ProductDto productDetails = inventoryClient.getProductDetails(body.getProductId());
 
         if (productDetails.getAvailableQuantity() < body.getQuantity()) {
-            throw new InsufficientStockException("Insufficient stock available");
+            throw new InsufficientStockException("Product stock is not available");
         }
 
         OrderEntity newOrder = OrderMapper.toEntity(body, userId, productDetails);
@@ -42,7 +44,8 @@ public class OrderService {
     }
 
     public OrderDto details(Long id) {
-        OrderEntity order = orderRepository.findById(id).orElseThrow(() -> new DataNotFoundException("order id not found"));
+        OrderEntity order = orderRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("order id not found"));
         return OrderMapper.toDto(order);
     }
 

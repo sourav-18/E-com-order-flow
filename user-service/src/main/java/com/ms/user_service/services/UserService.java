@@ -53,4 +53,10 @@ public class UserService {
         return UserMapper.toDto(userEntity);
     }
 
+    public UserDto profile(Long id){
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        return UserMapper.toDto(user);
+    }
+
 }
