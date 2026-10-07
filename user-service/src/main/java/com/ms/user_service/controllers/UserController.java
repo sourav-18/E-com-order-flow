@@ -22,7 +22,7 @@ public class UserController {
         Long userId = Long.valueOf(request.getHeader("user-id"));
         UserDto profile = userService.profile(userId);
         ApiResponseDto<UserDto> apiResponse = new ApiResponseDto<>
-                (200, "Order create successfully", profile);
+                (200, "profile details successfully", profile);
         return ResponseEntity.status(200).body(apiResponse);
     }
 }
