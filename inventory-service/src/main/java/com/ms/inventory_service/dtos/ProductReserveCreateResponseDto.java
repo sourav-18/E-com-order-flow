@@ -9,6 +9,8 @@ import lombok.Setter;
 @Builder
 public class ProductReserveCreateResponseDto {
     private Long orderId;
+    private Long userId;
+    private Long productId;
     private Integer totalAmount;
     private String nextApiUrl;
 }

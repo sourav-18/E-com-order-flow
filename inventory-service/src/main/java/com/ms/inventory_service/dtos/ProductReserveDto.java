@@ -17,6 +17,7 @@ public class ProductReserveDto {
     private Long id;
     private Long orderId;
     private Long productId;
+    private Long userId;
     private Integer quantity;
     private ProductReservesStatusType status;
     private int totalAmount;

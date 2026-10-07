@@ -18,4 +18,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(400)
                 .body(new ApiErrorResponseDto(400,ex.getMessage()));
     }
+
+    @ExceptionHandler(InvalidArgumentException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleValidationException(InvalidArgumentException ex) {
+        return ResponseEntity.status(400)
+                .body(new ApiErrorResponseDto(400,ex.getMessage()));
+    }
+
+    @ExceptionHandler(FeignClientException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleFeignClientException(FeignClientException ex) {
+        return ResponseEntity.status(ex.getStatus())
+                .body(new ApiErrorResponseDto(ex.getStatus(),ex.getMessage()));
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleValidationException(InsufficientStockException ex) {
+        return ResponseEntity.status(400)
+                .body(new ApiErrorResponseDto(400,ex.getMessage()));
+    }
 }

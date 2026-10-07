@@ -27,6 +27,9 @@ public class ProductReservesEntity {
     private Long productId;
 
     @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
     private Integer quantity;
 
     @Enumerated(EnumType.STRING)

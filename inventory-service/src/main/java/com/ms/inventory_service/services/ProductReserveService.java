@@ -7,11 +7,14 @@ import com.ms.inventory_service.entities.ProductReservesEntity;
 import com.ms.inventory_service.entities.types.ProductReservesStatusType;
 import com.ms.inventory_service.exceptions.DataNotFoundException;
 import com.ms.inventory_service.exceptions.DuplicateProductReserveException;
+import com.ms.inventory_service.exceptions.InsufficientStockException;
+import com.ms.inventory_service.exceptions.InvalidArgumentException;
 import com.ms.inventory_service.mapper.ProductReserveMapper;
 import com.ms.inventory_service.repositories.ProductRepository;
 import com.ms.inventory_service.repositories.ProductReserveRepository;
 import com.ms.inventory_service.utils.StatusUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,23 +25,26 @@ public class ProductReserveService {
     private final ProductReserveRepository productReserveRepository;
     private final OrderClient orderClient;
     private final ProductService productService;
-    private String nextApiUrl = "http://localhost:9003/api/v1/payments";  //todo move to utils
+    @Value("${payment.api}")
+    private String nextApiUrl;
 
     @Transactional
     public ProductReserveCreateResponseDto reserved(Long orderId,Long useId) {
         OrderDto orderDetails = orderClient.details(orderId);
         if(!orderDetails.getUserId().equals(useId)){
-            throw new DuplicateProductReserveException("It's not your order"); //todo proper set error
+            throw new InvalidArgumentException("It's not your order");
         }
+
         ProductReservesEntity productReservesEntity = productReserveRepository.findByOrderId(orderId).orElse(null);
         if (productReservesEntity != null) {
             throw new DuplicateProductReserveException("product already reserved for this order");
         }
         boolean isReserved = productService.reserveAvailableQuantity(orderDetails.getProductId(), orderDetails.getQuantity());
         if(!isReserved){
-            throw new DuplicateProductReserveException("insaficiat avaliable quantity"); //todo proper set error
+            throw new InsufficientStockException("Product stock is not available");
         }
         ProductReservesEntity newReserved = ProductReserveMapper.toEntity(orderId,
+                useId,
                 orderDetails.getProductId(),
                 orderDetails.getQuantity(),
                 orderDetails.getFinalTotalPrice()
