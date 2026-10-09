@@ -4,6 +4,7 @@ import com.ms.inventory_service.dtos.*;
 import com.ms.inventory_service.services.ProductReserveService;
 import com.ms.inventory_service.services.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,21 +19,21 @@ public class ProductController {
     private final ProductReserveService productReserveService;
 
     @GetMapping("/{id}")
-    public ProductDto details(HttpServletRequest request, @PathVariable("id") Long id){
+    public ProductDto details(HttpServletRequest request, @PathVariable("id") Long id) {
         System.out.println(request.getHeader("user-id"));
         return productService.details(id);
     }
 
     @PostMapping("/reserved/{orderId}")
-    public ResponseEntity<ApiResponseDto<ProductReserveCreateResponseDto>> reserved(HttpServletRequest request,@PathVariable("orderId") Long orderId){
+    public ResponseEntity<ApiResponseDto<ProductReserveCreateResponseDto>> reserved(HttpServletRequest request, @PathVariable("orderId") Long orderId) {
         Long userId = Long.valueOf(request.getHeader("user-id"));
-        ProductReserveCreateResponseDto reserved = productReserveService.reserved(orderId,userId);
-        ApiResponseDto<ProductReserveCreateResponseDto>apiResponse=new ApiResponseDto<>(201,"Product Reserved successfully",reserved);
+        ProductReserveCreateResponseDto reserved = productReserveService.reserved(orderId, userId);
+        ApiResponseDto<ProductReserveCreateResponseDto> apiResponse = new ApiResponseDto<>(201, "Product Reserved successfully", reserved);
         return ResponseEntity.status(201).body(apiResponse);
     }
 
     @GetMapping("/reserved/{orderId}")
-    public ProductReserveDto reservedDetails(@PathVariable("orderId") Long orderId){
+    public ProductReserveDto reservedDetails(@PathVariable("orderId") Long orderId) {
         return productReserveService.details(orderId);
     }
 

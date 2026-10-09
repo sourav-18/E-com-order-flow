@@ -2,6 +2,7 @@ package com.ms.inventory_service.services;
 
 import com.ms.inventory_service.clients.OrderClient;
 import com.ms.inventory_service.dtos.OrderDto;
+import com.ms.inventory_service.dtos.ProductCreateRequestDto;
 import com.ms.inventory_service.dtos.ProductDto;
 import com.ms.inventory_service.dtos.ProductReserveCreateResponseDto;
 import com.ms.inventory_service.entities.ProductEntity;
@@ -22,24 +23,28 @@ public class ProductService {
     private final ProductRepository productRepository;
 
 
+//    public ProductDto create(ProductCreateRequestDto body) {
+//        ProductEntity newProduct = ProductMapper.toEntity(body);
+//        productRepository.save(newProduct);
+//        return ProductMapper.toDto(newProduct);
+//    }
 
-    public ProductDto details(Long id){
-        ProductEntity product=productRepository.findById(id)
-                .orElseThrow(()->new DataNotFoundException("Product not found"));
+    public ProductDto details(Long id) {
+        ProductEntity product = productRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Product not found"));
         return ProductMapper.toDto(product);
     }
 
     @Transactional
-    public void restoreAvailableQuantity(Long id,Integer quantity){
-        productRepository.updateAvailableQuantity(id,quantity);
+    public void restoreAvailableQuantity(Long id, Integer quantity) {
+        productRepository.updateAvailableQuantity(id, quantity);
     }
 
     @Transactional
-    public boolean reserveAvailableQuantity(Long id,Integer quantity){
+    public boolean reserveAvailableQuantity(Long id, Integer quantity) {
         Integer updated = productRepository.reserveAvailableQuantity(id, quantity);
         return updated != 0;
     }
-
 
 
 }
