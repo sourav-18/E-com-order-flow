@@ -65,7 +65,6 @@ public class ProductReserveService {
                 .PaymentStatusToProductReservesStatus(paymentStatusDto.getStatus());
         Integer updated = productReserveRepository.updateStatus(paymentStatusDto.getOrderId(), status, ProductReservesStatusType.pending);
         if (updated == 0) return;
-        System.out.println(status);
         if (status == ProductReservesStatusType.cancel) {
             ProductReservesEntity productReservesEntity = productReserveRepository.findByOrderId(paymentStatusDto.getOrderId()).orElse(null);
             if (productReservesEntity == null) return;
