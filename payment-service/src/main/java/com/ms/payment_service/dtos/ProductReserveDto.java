@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class ProductReserveDto {
     private Long id;
     private Long orderId;
+    private Long userId;
     private Long productId;
     private Integer quantity;
     private ProductReservesStatusType status;

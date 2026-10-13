@@ -5,6 +5,7 @@ import com.ms.payment_service.clients.OrderClient;
 import com.ms.payment_service.dtos.*;
 import com.ms.payment_service.entities.PaymentEntity;
 import com.ms.payment_service.entities.types.PaymentStatus;
+import com.ms.payment_service.exceptins.InvalidArgumentException;
 import com.ms.payment_service.mappers.PaymentMapper;
 import com.ms.payment_service.repositories.PaymentRepository;
 import com.ms.payment_service.utils.PaymentUtil;
@@ -20,8 +21,14 @@ public class PaymentService {
     private final KafkaService kafkaService;
 
     @Transactional
-    public PaymentResponseDto payment(Long orderId) {
+    public PaymentResponseDto payment(Long orderId, Long userId) {
         ProductReserveDto productReserveDetails = inventoryClient.reservedDetails(orderId);
+        if (productReserveDetails == null) {
+            throw new InvalidArgumentException("Invalid orderId");
+        }
+        if (!productReserveDetails.getUserId().equals(userId)) {
+            throw new InvalidArgumentException("It's not your order");
+        }
         PaymentEntity paymentEntity = paymentRepository.findByOrderId(orderId).orElse(null);
         if (paymentEntity != null) {
             return PaymentMapper.toDto(paymentEntity, 200);
@@ -36,7 +43,7 @@ public class PaymentService {
         Long paymentId = Long.valueOf(body.getPaymentId());
         PaymentStatus status = PaymentUtil.getStatus(body.getStatus());
         Integer updated = paymentRepository.updateStatus(paymentId, status, PaymentStatus.pending);
-//        if (updated == 0) return;
+        if (updated == 0) return;
         PaymentEntity paymentEntity = paymentRepository.findById(paymentId).orElseThrow();
         kafkaService.sendPaymentStatus(
                 PaymentStatusDto.builder().

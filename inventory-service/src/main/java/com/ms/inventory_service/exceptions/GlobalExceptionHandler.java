@@ -14,13 +14,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateProductReserveException.class)
-    public ResponseEntity<ApiErrorResponseDto> handleValidationException(DuplicateProductReserveException ex) {
+    public ResponseEntity<ApiErrorResponseDto> handleDuplicateProductReserveException(DuplicateProductReserveException ex) {
         return ResponseEntity.status(400)
                 .body(new ApiErrorResponseDto(400,ex.getMessage()));
     }
 
     @ExceptionHandler(InvalidArgumentException.class)
-    public ResponseEntity<ApiErrorResponseDto> handleValidationException(InvalidArgumentException ex) {
+    public ResponseEntity<ApiErrorResponseDto> handleInvalidArgumentException(InvalidArgumentException ex) {
         return ResponseEntity.status(400)
                 .body(new ApiErrorResponseDto(400,ex.getMessage()));
     }
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InsufficientStockException.class)
-    public ResponseEntity<ApiErrorResponseDto> handleValidationException(InsufficientStockException ex) {
+    public ResponseEntity<ApiErrorResponseDto> handleInsufficientStockException(InsufficientStockException ex) {
         return ResponseEntity.status(400)
                 .body(new ApiErrorResponseDto(400,ex.getMessage()));
     }
