@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
                 .body(new ApiErrorResponseDto(HttpStatus.BAD_REQUEST.value(),errorsMessage));
     }
 
-    @ExceptionHandler(FeignException.class)
+//    @ExceptionHandler(FeignException.class)
     public ResponseEntity<ApiErrorResponseDto> handleValidationException(FeignException ex) {
         return ResponseEntity.status(400)
                 .body(new ApiErrorResponseDto(400,ex.getMessage()));

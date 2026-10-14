@@ -27,7 +27,7 @@ public class PaymentService {
             throw new InvalidArgumentException("Invalid orderId");
         }
         if (!productReserveDetails.getUserId().equals(userId)) {
-            throw new InvalidArgumentException("It's not your order");
+            throw new InvalidArgumentException("It's not your payment");
         }
         PaymentEntity paymentEntity = paymentRepository.findByOrderId(orderId).orElse(null);
         if (paymentEntity != null) {

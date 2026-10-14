@@ -20,16 +20,17 @@ public class CustomFeignErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
         S2SErrorResponseDto responseBody = extractResponseBody(response);
-        String message = responseBody.getMessage()!=null?responseBody.getMessage():response.reason();
+        String message = responseBody.getMessage() != null ? responseBody.getMessage() : response.reason();
         return new FeignClientException(message, responseBody.getStatus());
     }
 
     private S2SErrorResponseDto extractResponseBody(Response response) {
+        String s = null;
         try {
-            String s=new String(response.body().asInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            s = new String(response.body().asInputStream().readAllBytes(), StandardCharsets.UTF_8);
             return objectMapper.readValue(s, S2SErrorResponseDto.class);
         } catch (Exception ex) {
-            return new S2SErrorResponseDto(500, null);
+            return new S2SErrorResponseDto(500, s);
         }
     }
 }
